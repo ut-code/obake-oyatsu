@@ -37,4 +37,4 @@ pnpm typecheck  # tsrs（TypeScript 7 の Rust 移植）
 pnpm test       # vitest
 ```
 
-`main` に push すると GitHub Pages（https://ut-code.github.io/obake-oyatsu/）にデプロイされる。
+`main` に push すると [GitHub Pages](https://ut-code.github.io/obake-oyatsu/) にデプロイされる。
