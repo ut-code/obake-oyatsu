@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>おばけにおやつ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="screen">
+      <div id="board"></div>
+      <div id="shop"></div>
+      <aside id="side">
+        <div class="stat"><span>のこり</span><b class="time"><em id="time"></em>秒</b></div>
+        <div class="stat"><span>おかね</span><b class="money"><em id="money"></em>円</b></div>
+        <div id="tip">おうちに ついたら ゲームオーバー！</div>
+        <div id="desc"><h3 id="desc-name"></h3><p id="desc-text"></p></div>
+      </aside>
+      <div id="overlay">
+        <p id="message"></p>
+        <button id="start">スタート</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
