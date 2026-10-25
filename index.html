@@ -11,26 +11,50 @@
       rel="stylesheet"
     />
   </head>
-  <body>
-    <div id="screen">
-      <div id="board"></div>
-      <div id="shop"></div>
-      <aside id="side">
-        <div class="stat">
-          <span>のこり</span><b class="time"><em id="time"></em>秒</b>
+  <body class="m-0 h-screen overflow-hidden bg-bg font-sans font-extrabold text-text">
+    <!-- デザインは 1280x720 固定で作られているため、その座標系のまま組んで画面に合わせて拡縮する。そうしないとピクセル位置がずれて再現度が落ちる -->
+    <div id="screen" class="absolute top-1/2 left-1/2 h-[720px] w-[1280px] origin-top-left">
+      <div
+        id="board"
+        class="absolute top-5 left-5 h-[488px] w-[872px] overflow-hidden rounded-3xl border-4 border-frame bg-bg"
+      ></div>
+      <div id="shop" class="absolute top-[520px] left-6 flex h-44 w-[864px] gap-4"></div>
+      <aside class="absolute top-6 left-[912px] h-[672px] w-[344px] rounded-[18px] bg-panel p-6">
+        <div class="mb-4 flex h-[103px] items-center justify-between rounded-[14px] bg-card px-6">
+          <span class="text-xl tracking-widest text-sub">のこり</span>
+          <b class="text-[22px] text-mint"
+            ><em id="time" class="mr-1 text-[46px] not-italic"></em>秒</b
+          >
         </div>
-        <div class="stat">
-          <span>おかね</span><b class="money"><em id="money"></em>円</b>
+        <div class="mb-4 flex h-[103px] items-center justify-between rounded-[14px] bg-card px-6">
+          <span class="text-xl tracking-widest text-sub">おかね</span>
+          <b class="text-[22px] text-yellow"
+            ><em id="money" class="mr-1 text-[46px] not-italic"></em>円</b
+          >
         </div>
-        <div id="tip">おうちに ついたら ゲームオーバー！</div>
-        <div id="desc">
-          <h3 id="desc-name"></h3>
-          <p id="desc-text"></p>
+        <div
+          class="absolute top-[438px] right-6 left-6 rounded-[14px] bg-pink px-5 py-3.5 text-[17px] leading-relaxed text-[#4a2440]"
+        >
+          おうちに ついたら ゲームオーバー！
+        </div>
+        <div
+          class="absolute top-[536px] right-6 left-6 h-28 rounded-[14px] bg-card px-[22px] py-[18px]"
+        >
+          <h3 id="desc-name" class="mb-3.5 text-2xl tracking-widest"></h3>
+          <p id="desc-text" class="text-[15px] font-medium text-sub"></p>
         </div>
       </aside>
-      <div id="overlay">
-        <p id="message"></p>
-        <button id="start">スタート</button>
+      <div
+        id="overlay"
+        class="absolute inset-0 flex flex-col items-center justify-center gap-6 rounded-3xl bg-[#1e1640]/90 [&[hidden]]:hidden"
+      >
+        <p id="message" class="text-center text-[34px] leading-relaxed whitespace-pre-line"></p>
+        <button
+          id="start"
+          class="cursor-pointer rounded-full bg-yellow px-12 py-3 text-[22px] text-bg"
+        >
+          スタート
+        </button>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
