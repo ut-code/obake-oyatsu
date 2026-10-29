@@ -1,14 +1,14 @@
-import { PATH, SLOTS, key, reach } from "./board";
-import { SNACKS, type SnackType } from "./snacks";
+import { key, reach } from "./board";
+import type { SnackType } from "./snacks";
+import type { Stage } from "./stage";
 
-export const GAME_SECONDS = 90;
-export const START_MONEY = 120;
 const EAT_INTERVAL = 0.6;
 const DONE_LINGER = 2;
 
 export type Snack = { type: SnackType; left: number };
 export type Ghost = {
   id: number;
+  route: number;
   pos: number;
   speed: number;
   size: number;
@@ -20,6 +20,7 @@ export type Ghost = {
 export type Status = "playing" | "clear" | "over";
 
 export type Game = {
+  stage: Stage;
   money: number;
   timeLeft: number;
   elapsed: number;
@@ -30,10 +31,11 @@ export type Game = {
   nextId: number;
 };
 
-export function createGame(): Game {
+export function createGame(stage: Stage): Game {
   return {
-    money: START_MONEY,
-    timeLeft: GAME_SECONDS,
+    stage,
+    money: stage.money,
+    timeLeft: stage.seconds,
     elapsed: 0,
     spawnTimer: 1,
     status: "playing",
@@ -44,8 +46,8 @@ export function createGame(): Game {
 }
 
 export function placeSnack(g: Game, slot: number, type: number): boolean {
-  const k = key(SLOTS[slot]);
-  const t = SNACKS[type];
+  const k = key(g.stage.slots[slot]);
+  const t = g.stage.snacks[type];
   if (g.status !== "playing" || g.snacks.has(k) || g.money < t.price) return false;
   g.money -= t.price;
   g.snacks.set(k, { type: t, left: t.amount });
@@ -53,11 +55,12 @@ export function placeSnack(g: Game, slot: number, type: number): boolean {
 }
 
 export function spawnGhost(g: Game, rand: () => number) {
-  const lv = g.elapsed / GAME_SECONDS;
+  const lv = g.elapsed / g.stage.seconds;
   // 大きいおばけほど遅くて食いしん坊にする。見た目の大きさで手強さが分かるようにするため
   const size = [0.55, 0.75, 1][Math.floor(rand() * (1 + Math.min(2, lv * 3)))];
   g.ghosts.push({
     id: g.nextId++,
+    route: Math.floor(rand() * g.stage.routes.length),
     pos: 0,
     size,
     speed: (1.1 - size * 0.4) * (1 + lv),
@@ -69,7 +72,8 @@ export function spawnGhost(g: Game, rand: () => number) {
 }
 
 function snackInReach(g: Game, ghost: Ghost) {
-  const c = PATH[Math.min(PATH.length - 1, Math.round(ghost.pos))];
+  const path = g.stage.routes[ghost.route];
+  const c = path[Math.min(path.length - 1, Math.round(ghost.pos))];
   for (const [k, s] of g.snacks) {
     const [x, y] = k.split(",").map(Number);
     if (s.left > 0 && reach(c, { x, y })) return [k, s] as const;
@@ -88,7 +92,7 @@ export function step(g: Game, dt: number, rand: () => number = Math.random): Sta
   g.spawnTimer -= dt;
   if (g.spawnTimer <= 0) {
     spawnGhost(g, rand);
-    g.spawnTimer = 3.6 - (g.elapsed / GAME_SECONDS) * 2;
+    g.spawnTimer = 3.6 - (g.elapsed / g.stage.seconds) * 2;
   }
 
   for (const ghost of g.ghosts) {
@@ -100,7 +104,7 @@ export function step(g: Game, dt: number, rand: () => number = Math.random): Sta
       if (ghost.cooldown <= 0) eat(g, ghost, near[0], near[1]);
     } else {
       ghost.pos += ghost.speed * dt;
-      if (ghost.pos >= PATH.length - 1.5) return (g.status = "over");
+      if (ghost.pos >= g.stage.routes[ghost.route].length - 1.5) return (g.status = "over");
     }
   }
   g.ghosts = g.ghosts.filter((gh) => gh.doneAt < 0 || g.elapsed - gh.doneAt <= DONE_LINGER);

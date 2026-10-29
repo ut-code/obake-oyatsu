@@ -51,10 +51,17 @@
         <p id="message" class="text-center text-[34px] leading-relaxed whitespace-pre-line"></p>
         <button
           id="start"
-          class="cursor-pointer rounded-full bg-yellow px-12 py-3 text-[22px] text-bg"
+          class="cursor-pointer rounded-full bg-yellow px-12 py-3 text-[22px] text-bg [&[hidden]]:hidden"
         >
           スタート
         </button>
+        <nav
+          id="stage-list"
+          class="grid max-h-[480px] grid-cols-2 gap-4 overflow-y-auto [&[hidden]]:hidden"
+        ></nav>
+        <a id="to-select" href="#/" class="text-lg text-sub [&[hidden]]:hidden"
+          >ステージを えらぶ</a
+        >
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
