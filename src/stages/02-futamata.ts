@@ -3,7 +3,6 @@ import { defineStage } from "../stage";
 // 分岐ルートの書き方の見本。上の道と下の道に分かれ、おうちの手前で合流する
 export default defineStage({
   name: "ふたまたの みち",
-  author: "tknkaa",
   routes: [
     [
       { x: 0, y: 2 },

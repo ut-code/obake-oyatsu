@@ -2,7 +2,6 @@ import { defineStage } from "../stage";
 
 export default defineStage({
   name: "はじまりの みち",
-  author: "tknkaa",
   routes: [
     [
       { x: 0, y: 1 },

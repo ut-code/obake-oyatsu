@@ -132,11 +132,11 @@ export function createView(handlers: {
       setHtml(el, s ? s.type.svg : EMPTY_SLOT);
       el.style.opacity = s ? String(0.45 + 0.55 * (s.left / s.type.amount)) : "1";
     });
-    const sel = slots[ui.selectedSlot];
-    const showRange = g.snacks.has(key(sel));
+    // 選んだ置き場だけでなく、置いてあるおやつ全部の届く範囲を光らせる。そうしないと、おやつ同士の範囲の重なりやすき間が見えないため
+    const placed = slots.filter((c) => g.snacks.has(key(c)));
     for (const [k, el] of pathTiles) {
       const [x, y] = k.split(",").map(Number);
-      el.dataset.range = String(showRange && reach(sel, { x, y }));
+      el.dataset.range = String(placed.some((c) => reach(c, { x, y })));
     }
     const alive = new Set(g.ghosts.map((gh) => gh.id));
     for (const [id, el] of ghostEls)
@@ -165,7 +165,7 @@ export function createView(handlers: {
     list.innerHTML = stages
       .map(
         (st, i) =>
-          `<a href="#/stages/${i + 1}" class="rounded-2xl bg-card px-6 py-4 text-center no-underline text-text hover:bg-panel"><div class="text-2xl">${i + 1}. ${st.name}</div><div class="mt-1 text-sm text-sub">つくったひと: ${st.author}</div></a>`,
+          `<a href="#/stages/${i + 1}" class="rounded-2xl bg-card px-6 py-4 text-center no-underline text-text hover:bg-panel"><div class="text-2xl">${i + 1}. ${st.name}</div></a>`,
       )
       .join("");
     list.hidden = false;
