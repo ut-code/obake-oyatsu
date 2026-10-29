@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { HOUSE, PATH, SLOTS, buildPath, key, pathPoint, reach } from "./board";
+import { buildPath, pathPoint, reach } from "./board";
 
 describe("buildPath", () => {
   it("角をつないで1マスずつの道にする", () => {
@@ -18,28 +18,6 @@ describe("buildPath", () => {
   });
 });
 
-describe("盤面", () => {
-  it("道は途切れず隣接マスでつながっている", () => {
-    for (let i = 1; i < PATH.length; i++) {
-      const a = PATH[i - 1],
-        b = PATH[i];
-      expect(Math.abs(a.x - b.x) + Math.abs(a.y - b.y)).toBe(1);
-    }
-  });
-
-  it("家は道の終点にある", () => {
-    expect(HOUSE).toEqual({ x: 8, y: 1 });
-  });
-
-  it("置き場は道と重ならず、どれも道に届く", () => {
-    const path = new Set(PATH.map(key));
-    for (const s of SLOTS) {
-      expect(path.has(key(s))).toBe(false);
-      expect(PATH.some((c) => reach(s, c))).toBe(true);
-    }
-  });
-});
-
 describe("reach", () => {
   it("斜めを含む周囲8マスだけ届く", () => {
     expect(reach({ x: 0, y: 0 }, { x: 1, y: 1 })).toBe(true);
@@ -51,7 +29,11 @@ describe("reach", () => {
 
 describe("pathPoint", () => {
   it("マスの間を補間する", () => {
-    expect(pathPoint(0.5)).toEqual({ x: 0.5, y: 1 });
-    expect(pathPoint(PATH.length + 10)).toEqual(HOUSE);
+    const path = buildPath([
+      { x: 0, y: 1 },
+      { x: 2, y: 1 },
+    ]);
+    expect(pathPoint(path, 0.5)).toEqual({ x: 0.5, y: 1 });
+    expect(pathPoint(path, 10)).toEqual({ x: 2, y: 1 });
   });
 });

@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { PATH } from "./board";
-import { START_MONEY, createGame, placeSnack, spawnGhost, step } from "./game";
+import { createGame as create, placeSnack, spawnGhost, step } from "./game";
 import { SNACKS } from "./snacks";
+import { loadStage } from "./stage";
+import hajimari from "./stages/01-hajimari";
+
+// ステージファイルの数値が調整されてもテストが壊れないよう、テスト用に固定したステージを使う
+const STAGE = loadStage({ ...hajimari, snacks: ["cookie", "pudding", "cotton"], money: 120 });
+const START_MONEY = STAGE.money;
+const PATH = STAGE.routes[0];
+const createGame = () => create(STAGE);
 
 // 置き場 2 は (1,2) で、出現位置 (0,1) の斜め下にあるため、出てすぐのおばけが食べられる
 const SLOT_NEAR_START = 2;
@@ -12,7 +19,7 @@ describe("placeSnack", () => {
   it("お金を払っておやつを置く", () => {
     const g = createGame();
     expect(placeSnack(g, 0, PUDDING)).toBe(true);
-    expect(g.money).toBe(START_MONEY - SNACKS[PUDDING].price);
+    expect(g.money).toBe(START_MONEY - SNACKS.pudding.price);
     expect(g.snacks.size).toBe(1);
   });
 
@@ -20,12 +27,12 @@ describe("placeSnack", () => {
     const g = createGame();
     placeSnack(g, 0, COOKIE);
     expect(placeSnack(g, 0, COOKIE)).toBe(false);
-    expect(g.money).toBe(START_MONEY - SNACKS[COOKIE].price);
+    expect(g.money).toBe(START_MONEY - SNACKS.cookie.price);
   });
 
   it("お金が足りないと置けない", () => {
     const g = createGame();
-    g.money = SNACKS[PUDDING].price - 1;
+    g.money = SNACKS.pudding.price - 1;
     expect(placeSnack(g, 0, PUDDING)).toBe(false);
     expect(g.snacks.size).toBe(0);
   });
@@ -68,6 +75,13 @@ describe("step", () => {
     spawnGhost(g, () => 0.99);
     for (let i = 0; i < 200 && g.snacks.size > 0; i++) step(g, 0.05);
     expect(g.snacks.size).toBe(0);
+  });
+
+  it("おばけはルートのどれかを通る", () => {
+    const twoRoutes = loadStage({ ...hajimari, routes: [hajimari.routes[0], hajimari.routes[0]] });
+    const g = create(twoRoutes);
+    spawnGhost(g, () => 0.99);
+    expect(g.ghosts[0].route).toBe(1);
   });
 
   it("終了後は進まない", () => {

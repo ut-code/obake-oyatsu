@@ -9,8 +9,8 @@ export type SnackType = {
   bite: number;
   desc: string;
 };
-export const SNACKS: SnackType[] = [
-  {
+export const SNACKS = {
+  cookie: {
     name: "クッキー",
     svg: cookieSvg,
     price: 30,
@@ -19,7 +19,7 @@ export const SNACKS: SnackType[] = [
     bite: 1,
     desc: "すこし まんぷくに なるよ。",
   },
-  {
+  pudding: {
     name: "プリン",
     svg: puddingSvg,
     price: 50,
@@ -28,7 +28,7 @@ export const SNACKS: SnackType[] = [
     bite: 2,
     desc: "けっこう まんぷくに なるよ。",
   },
-  {
+  cotton: {
     name: "わたあめ",
     svg: cottonSvg,
     price: 80,
@@ -37,4 +37,6 @@ export const SNACKS: SnackType[] = [
     bite: 3,
     desc: "とても まんぷくに なるよ。",
   },
-];
+} satisfies Record<string, SnackType>;
+
+export type SnackId = keyof typeof SNACKS;
