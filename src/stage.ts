@@ -4,7 +4,6 @@ import { SNACKS, type SnackId, type SnackType } from "./snacks";
 // ステージファイルに書く内容。初心者が src/stages/ にファイルを1つ足すだけでステージを増やせるよう、ここに全部の設定を集める
 export type StageData = {
   name: string;
-  author: string;
   // おばけが通るルート。曲がり角の座標を順に書く。分岐させたいときはルートを複数書き、最後は同じおうちにそろえる
   routes: Cell[][];
   // おやつの置き場
@@ -17,7 +16,6 @@ export type StageData = {
 
 export type Stage = {
   name: string;
-  author: string;
   routes: Cell[][];
   house: Cell;
   slots: Cell[];
